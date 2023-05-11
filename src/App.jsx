@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { setNoteList } from "store/notes/notes-slice";
-import s from "./style.module.css"
+import s from "./style.module.css";
+import { withAuthRequired } from "hoc/withAuthRequired";
 
 export function App() {
   const dispatch = useDispatch();
-
   async function fetchAllNotes() {
     const noteList = await NOTE_API.fetchAll();
     dispatch(setNoteList(noteList));
@@ -27,3 +27,5 @@ export function App() {
     </div>
   );
 }
+
+export const ProtectedApp = withAuthRequired(App)

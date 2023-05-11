@@ -3,10 +3,13 @@ import { NoteList } from "container/NoteList/noteList";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { ButtonPrimary } from "components/ButtonPrimary/ButtonPrimary";
+import { useNavigate } from "react-router-dom";
 
 export function NoteBrowse() {
   const noteList = useSelector((store) => store.noteSlice.noteList);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const filteredNoteList = noteList.filter((note) => {
     const containsTitle = note.title
@@ -27,11 +30,16 @@ export function NoteBrowse() {
   return (
     <>
       <div className="row justify-content-center mb-5">
-        <div className="col-sm-12 col-md-4">
+        <div className="col-sm-12 col-md-8">
           <SearchBar
             onTextChange={setSearchTerm}
             placeholder="Search your notes..."
           />
+        </div>
+        <div className="col-sm-12 col-md-2 mt-1">
+          <ButtonPrimary onClick={() => navigate("/note/new")}>
+            Add Note +{" "}
+          </ButtonPrimary>
         </div>
       </div>
       {noteList?.length === 0 && (
