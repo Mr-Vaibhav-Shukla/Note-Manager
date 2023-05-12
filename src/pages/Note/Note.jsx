@@ -11,22 +11,26 @@ export function Note() {
   const navigate = useNavigate();
 
   const note = useSelector((store) =>
-    store.noteSlice.noteList.find((s) => s.id === +noteId)
+    store.noteSlice.noteList.find((s) => s.id === noteId)
   );
 
   const [isEditable, setIsEditable] = useState(false);
 
   const submit = async (formValues) => {
-    const update = await NOTE_API.updateById({ id: note.id, ...formValues });
+    const update = await NOTE_API.updateById({
+      id: note.id,
+      created_at: note.created_at,
+      ...formValues,
+    });
     dispatch(updateNote(update));
     setIsEditable(false);
   };
 
   async function deletingNote() {
     if (window.confirm("Are you sure you want to delete this note?")) {
-          await NOTE_API.deleteById(note.id);
-          dispatch(deleteNote(note));
-          navigate("/");
+      await NOTE_API.deleteById(note.id);
+      dispatch(deleteNote(note));
+      navigate("/");
     }
   }
 

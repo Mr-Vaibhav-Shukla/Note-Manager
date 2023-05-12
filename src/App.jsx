@@ -15,7 +15,7 @@ export function App() {
   }
 
   useEffect(() => {
-    fetchAllNotes();
+    NOTE_API.onSHouldSyncNotes(fetchAllNotes)
   });
 
   return (

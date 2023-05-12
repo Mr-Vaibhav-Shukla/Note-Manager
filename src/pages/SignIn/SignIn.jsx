@@ -21,7 +21,7 @@ export function SignIn() {
     try {
       const user = await AuthApi.signin(email, password);
       dispatch(setUser(user));
-      await toast("success", "Logged in successfully");
+      await toast("success", "Logging in ...");
       navigate("/");
     } catch (error) {
       await toast("error", error.message);

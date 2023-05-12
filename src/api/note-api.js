@@ -1,25 +1,43 @@
-import axios from "axios";
-
-const BASE_URL = "http://localhost:3200/notes";
-
+import { collection, getDocs, orderBy, query, addDoc, deleteDoc, doc, updateDoc, onSnapshot } from "firebase/firestore"
+import { FirebaseApp } from "services/firebase"
 export class NOTE_API {
   static async create(newNote) {
-    return (await axios.post(`${BASE_URL}`, newNote)).data;
+    const response = await addDoc(collection(FirebaseApp.db,"UXSBIWEHINDNWJCQUWE"), newNote);
+    return {
+      id: response.id,
+      ...newNote
+    }
   }
 
   static async fetchAll() {
-    return (await axios.get(`${BASE_URL}`)).data;
-  }
-
-  static async fetchById(id) {
-    return (await axios.get(`${BASE_URL}/${id}`)).data;
+    const q = query(collection(FirebaseApp.db,"UXSBIWEHINDNWJCQUWE"), orderBy("created_at", "asc"))
+    const response = await getDocs(q)
+    return response.docs.map(doc => {
+      return {
+        id: doc.id,
+        ...doc.data()
+      }
+    })
   }
 
   static async deleteById(id) {
-    return (await axios.delete(`${BASE_URL}/${id}`)).data;
+    await deleteDoc(doc(FirebaseApp.db, "UXSBIWEHINDNWJCQUWE", id))
   }
 
   static async updateById(updatedNote) {
-    return (await axios.patch(`${BASE_URL}/${updatedNote.id}`, updatedNote)).data;
+    const q = doc(FirebaseApp.db, "UXSBIWEHINDNWJCQUWE", updatedNote.id)
+    await updateDoc(q, updatedNote)
+    return updatedNote
+  }
+
+  static onSHouldSyncNotes(onChange){
+    const q = query(collection(FirebaseApp.db,"UXSBIWEHINDNWJCQUWE"))
+    const unsub = onSnapshot(q, (querrySnapshot)=> {
+      const isUserPerformingChanges = querrySnapshot.metadata.hasPendingWrites;
+      if(!isUserPerformingChanges){
+        onChange()
+      }
+    })
+    return unsub;
   }
 }
