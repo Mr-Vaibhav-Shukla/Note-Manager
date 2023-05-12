@@ -13,8 +13,6 @@ export function NoteCreate() {
       created_at: new Date().toLocaleDateString(),
     });
 
-    console.log(createNote);
-
     dispatch(addNote(createNote));
     alert("New note added successfully");
     navigate("/");

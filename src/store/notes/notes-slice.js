@@ -20,8 +20,9 @@ export const noteSlice = createSlice({
         },
 
         deleteNote: (currentSlice, action) => {
+            console.log("I am deleting ")
             const idx = currentSlice.noteList.indexOf(action.payload)
-            currentSlice.noteList.splice(idx,1)
+            currentSlice.noteList.splice(idx,0)
         }
     }
 })
